@@ -25,13 +25,21 @@
             <input type="text" name="item" placeholder="Item Name" required>
             <input type="submit" value="+ Add Item">
         </form>
+        <p>
+            <button type="button" id="clearAll">(-) Clean All</button>
+            <button type="button" id="selectAll">(+) Select All</button>
+            <button type="button" id="deleteAll">- Delete All</button>
+        </p>
     </div>
 
     <script>
         let $ = document.querySelector.bind(document);
         const addItems = $('.add-items');
         const itemsList = $('.plates');
-        const items = JSON.parse(localStorage.getItem('items')) || [];
+        const clearAll = $('#clearAll');
+        const selectAll = $('#selectAll');
+        const deleteAll = $('#deleteAll');
+        let items = JSON.parse(localStorage.getItem('items')) || [];
         let eh = '';
 
         function addItem(e) {
@@ -71,8 +79,33 @@
 
         }
 
+        function clearAllItems(params) {
+            items.forEach(el => {
+                el.done = false;
+            });
+            localStorage.setItem('items', JSON.stringify(items));
+            populateList(items, itemsList);
+        }
+
+        function selectAllItems(params) {
+            items.forEach(el => {
+                el.done = true;
+            });
+            localStorage.setItem('items', JSON.stringify(items));
+            populateList(items, itemsList);
+        }
+
+        function deleteAllItems(params) {
+            items = [];
+            localStorage.removeItem('items');
+            populateList(items, itemsList);
+        }
+
         populateList(items, itemsList);
         addItems.addEventListener('submit', addItem);
+        clearAll.addEventListener('click', clearAllItems);
+        selectAll.addEventListener('click', selectAllItems);
+        deleteAll.addEventListener('click', deleteAllItems);
         itemsList.addEventListener('click', toggleDone);
     </script>
 
